@@ -6,7 +6,10 @@
 <title>Gabry-ის Carpe Diem მოსაწვევი</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Noto+Serif+Georgian:wght@400;500&family=Pinyon+Script&display=swap" rel="stylesheet">
+<!-- Fonts load without blocking the first paint; system serif shows until they arrive. -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,400&family=Noto+Serif+Georgian:wght@400;500&family=Pinyon+Script&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,400&family=Noto+Serif+Georgian:wght@400;500&family=Pinyon+Script&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,400&family=Noto+Serif+Georgian:wght@400;500&family=Pinyon+Script&display=swap" rel="stylesheet"></noscript>
 <style>
 /* Layout idea: a deep-green evening room; a white envelope sealed with green wax
    opens into a white botanical card with lilies blooming at two corners. Single theme by choice. */
@@ -28,11 +31,11 @@ html,body{height:100%;margin:0}
 body{
   background:var(--forest);
   background-image:radial-gradient(120% 80% at 50% 20%, var(--moss) 0%, var(--forest) 70%);
-  background-attachment:fixed;
+  background-repeat:no-repeat;background-size:100% 100vh;
   color:var(--paper);
   font-family:var(--display);
   -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
+  overflow-x:clip;
 }
 body:not(.show){overflow:hidden}
 #dust{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
@@ -42,7 +45,7 @@ body:not(.show){overflow:hidden}
   position:fixed;inset:0;z-index:5;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px;
   padding:24px 16px;
-  transition:opacity .8s ease, transform .9s ease, visibility 0s .9s;
+  transition:opacity .5s ease, transform .6s ease, visibility 0s .6s;
 }
 .intro-head{text-align:center;display:flex;flex-direction:column;gap:6px;transition:opacity .5s ease}
 .intro-name{font-size:15px;letter-spacing:.5em;text-indent:.5em;color:var(--sage);text-transform:uppercase}
@@ -50,16 +53,16 @@ body:not(.show){overflow:hidden}
 .envelope{
   position:relative;width:min(84vw,400px);aspect-ratio:3/2;
   perspective:1200px;cursor:pointer;
-  filter:drop-shadow(0 24px 30px rgba(0,0,0,.35));
-  animation:float 5s ease-in-out infinite;
+  animation:float 6s ease-in-out infinite;
+  will-change:transform;
 }
-.env-back{position:absolute;inset:0;background:var(--paper-shade);border-radius:6px}
+.env-back{position:absolute;inset:0;background:var(--paper-shade);border-radius:6px;box-shadow:0 24px 40px rgba(0,0,0,.35)}
 .letter{
   position:absolute;left:6%;right:6%;top:6%;height:88%;z-index:2;
   background:var(--paper);border-radius:4px;border:1px solid rgba(79,125,92,.35);
   display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:9%;gap:4px;
   color:var(--ink);
-  transition:transform 1s cubic-bezier(.3,.7,.2,1);
+  transition:transform .7s cubic-bezier(.3,.7,.2,1);
 }
 .letter span:first-child{font-size:11px;letter-spacing:.4em;text-indent:.4em;text-transform:uppercase}
 .letter span:last-child{font-size:22px;font-weight:500;letter-spacing:.08em}
@@ -71,7 +74,7 @@ body:not(.show){overflow:hidden}
   background:linear-gradient(180deg,var(--paper) 0%,#e9e6d8 100%);
   clip-path:polygon(0 0,100% 0,50% 100%);
   transform-origin:50% 0;
-  transition:transform 1s cubic-bezier(.4,.1,.2,1), z-index 0s .5s;
+  transition:transform .6s cubic-bezier(.4,.1,.2,1), z-index 0s .3s;
 }
 .seal{
   position:absolute;left:50%;top:60%;z-index:6;
@@ -85,7 +88,7 @@ body:not(.show){overflow:hidden}
 .seal::after{
   content:"";position:absolute;inset:-8px;border-radius:50%;
   border:1px solid rgba(255,255,255,.55);
-  animation:ring 2.2s ease-out infinite;
+  animation:ring 3s ease-out infinite;
 }
 .seal:focus-visible{outline:2px solid #fff;outline-offset:6px}
 .hint{
@@ -108,8 +111,9 @@ body.p3 .intro{opacity:0;transform:scale(1.25);visibility:hidden;pointer-events:
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;
   padding:64px 16px 40px;
   visibility:hidden;opacity:0;
+  overflow-x:clip;
 }
-body.show .invite{visibility:visible;animation:cardIn 1.2s cubic-bezier(.2,.8,.2,1) forwards}
+body.show .invite{visibility:visible;animation:cardIn .8s cubic-bezier(.2,.8,.2,1) forwards}
 .card{
   position:relative;width:100%;max-width:520px;
   background:var(--paper);color:var(--ink);
@@ -150,22 +154,22 @@ body.show .invite{visibility:visible;animation:cardIn 1.2s cubic-bezier(.2,.8,.2
 
 /* staged reveal */
 .r{opacity:0}
-body.show .r{animation:rise 1s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--i) * .24s + .7s)}
-body.show .rule i{animation:draw 1s ease forwards;animation-delay:calc(var(--i) * .24s + .7s);transform:scaleX(0)}
+body.show .r{animation:rise .6s ease-out forwards;animation-delay:calc(var(--i) * .08s + .3s)}
+body.show .rule i{animation:draw .6s ease forwards;animation-delay:calc(var(--i) * .08s + .3s);transform:scaleX(0)}
 .petal,.leafp{transform-box:fill-box;transform-origin:50% 100%;transform:scale(0)}
-body.show .petal,body.show .leafp{animation:bloom 1.6s cubic-bezier(.2,.9,.2,1) forwards;animation-delay:var(--d)}
+body.show .petal,body.show .leafp{animation:bloom .9s cubic-bezier(.2,.9,.2,1) forwards;animation-delay:calc(var(--d) * .5)}
 .stem{stroke-dasharray:1;stroke-dashoffset:1}
-body.show .stem{animation:grow 1.4s ease forwards .3s}
+body.show .stem{animation:grow .8s ease forwards .1s}
 .core{opacity:0}
-body.show .core{animation:fade .8s ease forwards;animation-delay:var(--d)}
+body.show .core{animation:fade .5s ease forwards;animation-delay:calc(var(--d) * .5)}
 
 @keyframes float{50%{transform:translateY(-8px)}}
 @keyframes ring{0%{transform:scale(.9);opacity:.8}100%{transform:scale(1.45);opacity:0}}
 @keyframes breathe{50%{opacity:.45}}
 @keyframes cardIn{from{opacity:0;transform:translateY(40px) scale(.94)}to{opacity:1;transform:none}}
-@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @keyframes draw{to{transform:scaleX(1)}}
-@keyframes bloom{0%{transform:scale(0) rotate(-25deg)}100%{transform:scale(1) rotate(0)}}
+@keyframes bloom{0%{transform:scale(0)}100%{transform:scale(1)}}
 @keyframes grow{to{stroke-dashoffset:0}}
 @keyframes fade{to{opacity:1}}
 
@@ -247,13 +251,18 @@ body.show .core{animation:fade .8s ease forwards;animation-delay:var(--d)}
            '<circle cx="-2" cy="-40" r=".8" fill="#4f7d5c" opacity=".45"/><circle cx="4" cy="-18" r=".8" fill="#4f7d5c" opacity=".45"/>' +
            '</g></g>';
     });
+    // The lily's heart: a soft glowing centre, six stamens along the petal midlines (so none
+    // hide behind a petal edge) and a pistil on top, all in one group that fades in together.
     o += '<g class="core" style="--d:' + (d0 + 0.9).toFixed(2) + 's">';
+    o += '<circle r="13" fill="url(#hg)"/>';
     for (var i = 0; i < 6; i++){
-      var a2 = 30 + i * 60;
-      o += '<g transform="rotate(' + a2 + ')"><path d="M0,0 Q4,-18 1,-36" fill="none" stroke="#6f9a78" stroke-width="1"/>' +
-           '<ellipse cx="1" cy="-39" rx="2.3" ry="5.5" fill="#2c5a3e" transform="rotate(20 1 -39)"/></g>';
+      var a2 = i * 60 + 4;
+      o += '<g transform="rotate(' + a2 + ')"><path d="M0,-3 Q2.5,-14 0,-27" fill="none" stroke="#5f8f6c" stroke-width="1.1" stroke-linecap="round"/>' +
+           '<ellipse cx="0" cy="-29.5" rx="1.9" ry="4" fill="#2c5a3e"/></g>';
     }
-    o += '<circle r="4" fill="#9dbd9f"/></g></g>';
+    o += '<path d="M0,0 Q-1.5,-10 0,-20" fill="none" stroke="#8fb394" stroke-width="1.6" stroke-linecap="round"/>' +
+         '<circle cx="0" cy="-21" r="2.4" fill="#8fb394"/>';
+    o += '<circle r="3.6" fill="#cfe0c8" stroke="#8fb394" stroke-width=".8"/></g></g>';
     return o;
   }
   function leaf(x, y, rot, l, w, d){
@@ -265,6 +274,7 @@ body.show .core{animation:fade .8s ease forwards;animation-delay:var(--d)}
     var o = '<defs>' +
       '<linearGradient id="pg" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#c9dcc6"/><stop offset=".5" stop-color="#ffffff"/><stop offset="1" stop-color="#fbfdf9"/></linearGradient>' +
       '<linearGradient id="lg" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#2c5a3e"/><stop offset="1" stop-color="#5f8f6c"/></linearGradient>' +
+      '<radialGradient id="hg"><stop offset="0" stop-color="#eef4e6"/><stop offset=".55" stop-color="#d5e4cd" stop-opacity=".9"/><stop offset="1" stop-color="#d5e4cd" stop-opacity="0"/></radialGradient>' +
       '</defs>';
     o += '<path class="stem" pathLength="1" d="M20,300 C40,230 70,170 118,118" fill="none" stroke="#3d6b4c" stroke-width="3" stroke-linecap="round"/>';
     o += '<path class="stem" pathLength="1" d="M60,215 C120,160 170,110 214,74" fill="none" stroke="#3d6b4c" stroke-width="2.2" stroke-linecap="round"/>';
@@ -277,13 +287,13 @@ body.show .core{animation:fade .8s ease forwards;animation-delay:var(--d)}
   }
   var art = bouquet();
   document.querySelectorAll('.flora').forEach(function(svg, n){
-    svg.innerHTML = n === 0 ? art : art.replace(/id="pg"/g,'id="pg2"').replace(/id="lg"/g,'id="lg2"').replace(/#pg\)/g,'#pg2)').replace(/#lg\)/g,'#lg2)');
+    svg.innerHTML = n === 0 ? art : art.replace(/id="pg"/g,'id="pg2"').replace(/id="lg"/g,'id="lg2"').replace(/#pg\)/g,'#pg2)').replace(/#lg\)/g,'#lg2)').replace(/id="hg"/g,'id="hg2"').replace(/#hg\)/g,'#hg2)');
   });
 
   /* ---------- Drifting petals ---------- */
   var cv = document.getElementById('dust'), ctx = cv.getContext('2d'), W = 0, H = 0, bits = [];
   function size(){
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var dpr = 1; // soft blurry petals don't need retina pixels; 4x fewer pixels to clear each frame
     W = window.innerWidth; H = window.innerHeight;
     cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
   }
@@ -293,13 +303,18 @@ body.show .core{animation:fade .8s ease forwards;animation-delay:var(--d)}
   }
   function burst(){
     if (reduce) return;
-    for (var i = 0; i < 70; i++){
+    for (var i = 0; i < 26; i++){
       var ang = Math.random()*Math.PI*2, sp = 2 + Math.random()*7;
       bits.push({x:W/2, y:H*0.45, r:3+Math.random()*6, vx:Math.cos(ang)*sp, vy:Math.sin(ang)*sp - 2,
-                 rot:Math.random()*6.3, vr:-.08+Math.random()*.16, a:.5+Math.random()*.4, life:220, g:.05});
+                 rot:Math.random()*6.3, vr:-.08+Math.random()*.16, a:.5+Math.random()*.4, life:110, g:.06});
     }
   }
-  function tick(){
+  var last = 0;
+  function tick(t){
+    if (document.hidden){ requestAnimationFrame(tick); return; }
+    // ~30 fps is plenty for slow drifting petals and halves the work on phones.
+    if (t - last < 32){ requestAnimationFrame(tick); return; }
+    last = t;
     ctx.clearRect(0,0,W,H);
     for (var i = bits.length - 1; i >= 0; i--){
       var p = bits[i];
@@ -309,15 +324,13 @@ body.show .core{animation:fade .8s ease forwards;animation-delay:var(--d)}
         if (p.g) bits.splice(i,1); else bits[i] = drifter(true);
         continue;
       }
-      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
       ctx.fillStyle = 'rgba(255,255,255,' + p.a + ')';
-      ctx.beginPath(); ctx.ellipse(0,0,p.r,p.r*0.45,0,0,Math.PI*2); ctx.fill();
-      ctx.restore();
+      ctx.beginPath(); ctx.ellipse(p.x,p.y,p.r,p.r*0.45,p.rot,0,Math.PI*2); ctx.fill();
     }
     requestAnimationFrame(tick);
   }
   size(); window.addEventListener('resize', size);
-  if (!reduce){ for (var k = 0; k < 28; k++) bits.push(drifter(false)); requestAnimationFrame(tick); }
+  if (!reduce){ for (var k = 0; k < (W < 600 ? 10 : 16); k++) bits.push(drifter(false)); requestAnimationFrame(tick); }
 
   /* ---------- Opening ceremony ---------- */
   var opened = false, timers = [];
@@ -326,9 +339,9 @@ body.show .core{animation:fade .8s ease forwards;animation-delay:var(--d)}
     if (opened) return; opened = true;
     if (reduce){ body.classList.add('p1','p2','p3','show'); return; }
     body.classList.add('p1');
-    later(function(){ body.classList.add('p2'); }, 950);
-    later(function(){ body.classList.add('p3'); }, 2050);
-    later(function(){ body.classList.add('show'); burst(); window.scrollTo(0,0); }, 2600);
+    later(function(){ body.classList.add('p2'); }, 550);
+    later(function(){ body.classList.add('p3'); }, 1250);
+    later(function(){ body.classList.add('show'); burst(); window.scrollTo(0,0); }, 1550);
   }
   document.getElementById('envelope').addEventListener('click', open);
   document.getElementById('replay').addEventListener('click', function(){
